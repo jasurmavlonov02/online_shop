@@ -1,0 +1,141 @@
+{% extends 'app/base/base.html' %}
+
+{% block title %}
+    Detail Page
+{% endblock %}
+
+
+{% block detail_content %}
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" width="300" height="450"
+                                           src="{{ product.image.url }}" alt="..."/></div>
+                <div class="col-md-6">
+                    {#                <div class="small mb-1">Rating: 124</div>#}
+                    <h1 class="display-5 fw-bolder">{{ product.name }}</h1>
+                    <div class="fs-5 mb-5">
+                        <span class="text-decoration-line-through">${{ product.price }}</span>
+                        <span>${{ product.discount_priced }}</span>
+                    </div>
+                    <p class="lead">{{ product.description }}</p>
+                    <div class="d-flex">
+                        <form>
+                            <div class="form-group">
+                                <h2>Place an order</h2>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="formGroupExampleInput">Your name</label>
+                                <input type="text" class="form-control" placeholder="Your name">
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="formGroupExampleInput2">Your phone</label>
+                                <input type="text" class="form-control" placeholder="Your phone">
+                            </div>
+
+
+                            <div class="form-group mb-3">
+
+                                <input type="text" class="btn btn-success" value="Send">
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mt-4 mb-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center">
+                    <h2>Latest comments ({{ count }})</h2>
+                </div>
+                {% for comment in comments %}
+                    <div class="media card p-4 mt-2">
+                        <div class="media-body">
+                            <h3 class="mt-0">{{ comment.full_name }} => {{ comment.created_at }}</h3>
+
+
+                            {{ comment.message }}
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="col-8 offset-2 mt-5">
+
+                <div class=" p-5">
+                    <div class="text-center">
+                        <h3>Add Comment</h3>
+                    </div>
+
+                    <form method="post" action="{% url 'add_comment' product.id %}">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="formGroupExampleInput">Your name</label>
+                            <input type="text" class="form-control" placeholder="Your name" name="full_name">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="formGroupExampleInput2">Your email</label>
+                            <input type="email" class="form-control" placeholder="Your email" name="email">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="formGroupExampleInput2">Your comment</label>
+                            <textarea name="message" class="form-control" id="" cols="30" rows="10"></textarea>
+                        </div>
+
+                        <div class="form-group mb-3">
+
+                            <input type="submit" class="btn btn-success" value="Send">
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Related items section-->
+    <section class="py-5 bg-light">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h2 class="fw-bolder mb-4">Related products</h2>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                {% for similar_product in similar_products %}
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top"
+                                 src="{{ similar_product.image.url }}" alt="..."/>
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">{{ similar_product.name }}</h5>
+                                    <!-- Product price-->
+                                    ${{ similar_product.price }}
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto"
+                                                            href="{% url 'detail' similar_product.id %}">View
+                                    product</a></div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+
+
+    </section>
+
+{% endblock %}
