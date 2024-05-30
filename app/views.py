@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from app.forms import ProductModelForm, CommentModelForm
 from app.models import Product, Category
+from app.forms import OrderModelForm
 
 
 # Create your views here.
@@ -41,7 +42,6 @@ def detail_product(request, pk):
     price_upper_bound = product.price * 1.2
     similar_products = Product.objects.all().filter(Q(price__lte=price_upper_bound) &
                                                     Q(price__gte=price_lower_bound)).exclude(id=pk)
-
 
     comments = product.comments.filter(is_active=True).order_by('-created_at')
 
@@ -111,3 +111,51 @@ def add_comment(request, product_id):
     }
 
     return render(request, 'app/detail.html', context)
+
+
+def order_product(request, pk):
+    # products = Product.objects.all() # [1,2,3,4,5]
+    product = Product.objects.filter(id=pk).first()  # [1]
+    form = OrderModelForm()
+    if request.method == 'POST':
+        form = OrderModelForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.product = product
+            order.save()
+            return redirect('detail', product.id)
+
+    context = {
+        'product': product,
+        'form': form
+    }
+
+    return render(request, 'app/detail.html', context)
+
+
+def delete_product(request, pk):
+    product = Product.objects.filter(id=pk).first()
+    if product:
+        product.delete()
+        return redirect('index')
+
+    context = {
+        'product': product,
+    }
+    return render('app/detail.html', context)
+
+
+def edit_product(request, pk):
+    product = Product.objects.get(id=pk)
+    form = ProductModelForm(instance=product)
+    if request.method == 'POST':
+        form = ProductModelForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('detail', product.id)
+
+    context = {
+        'form': form,
+        'product': product
+    }
+    return render(request, 'app/update-product.html', context)

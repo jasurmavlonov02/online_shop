@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group, User
 
-from app.models import Product, Comment, Category
-
+from app.models import Product, Comment, Category, Order
 
 # Register your models here.
 
-# admin.site.register(Product)
-# admin.site.register(Comment)
-# admin.site.register(Category)
+admin.site.register(Order)
+admin.site.register(Comment)
+admin.site.register(Category)
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):

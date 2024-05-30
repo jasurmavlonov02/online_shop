@@ -45,6 +45,7 @@ class Product(models.Model):
         verbose_name_plural = 'Mahsulotlar'
         verbose_name = 'Mahsulot'
 
+
 class Comment(models.Model):
     full_name = models.CharField(max_length=100, null=True, blank=True)
     email = models.EmailField()
@@ -60,3 +61,14 @@ class Comment(models.Model):
 
     class Meta:
         verbose_name_plural = 'Izohlar'
+
+
+class Order(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+    phone_number = models.CharField(max_length=13, null=True, blank=True)
+    product = models.ForeignKey('Product', on_delete=models.SET_NULL, related_name='orders', null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.phone_number

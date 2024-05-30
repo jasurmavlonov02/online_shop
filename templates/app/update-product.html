@@ -1,7 +1,7 @@
 {% extends 'app/base/base.html' %}
 {% load static %}
 
-{% block add_content %}
+{% block edit_content %}
     <form method="post" action="" enctype="multipart/form-data">
         {{ form.as_p }}
         {% csrf_token %}
